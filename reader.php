@@ -15,12 +15,6 @@ $pages = list_pages($manga, $chapter);
 $idx = array_search($chapter, $chapters);
 $prevChapter = ($idx !== false && $idx > 0) ? $chapters[$idx - 1] : null;
 $nextChapter = ($idx !== false && $idx < count($chapters) - 1) ? $chapters[$idx + 1] : null;
-
-// Danh sách ảnh của chương kế tiếp, dùng để preload
-$nextPages = $nextChapter ? list_pages($manga, $nextChapter) : [];
-$nextPageUrls = array_map(function ($p) use ($manga, $nextChapter) {
-    return MANGA_URL . '/' . rawurlencode($manga) . '/' . rawurlencode($nextChapter) . '/' . rawurlencode($p);
-}, $nextPages);
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -97,60 +91,8 @@ $nextPageUrls = array_map(function ($p) use ($manga, $nextChapter) {
         let lastScroll = window.scrollY || 0;
         const isLastChapter = <?= $nextChapter ? 'false' : 'true' ?>;
 
-        // --- preload ảnh chương sau (chỉ khi ảnh chương hiện tại đã load xong) ---
-        const nextPageUrls = <?= json_encode(array_values($nextPageUrls)) ?>;
-        const currentImgs = Array.from(pages ? pages.querySelectorAll('img') : []);
-        let preloadStarted = false;
-        let currentChapterLoaded = currentImgs.length === 0;
-        let pendingPreloadRequest = false;
-
-        function countLoadedImages(){
-            return currentImgs.filter(function (img) {
-                return img.complete && img.naturalWidth > 0;
-            }).length;
-        }
-
-        function markCurrentLoadedIfReady(){
-            if (currentChapterLoaded) return;
-            if (countLoadedImages() >= currentImgs.length) {
-                currentChapterLoaded = true;
-                // Nếu người dùng đã cuộn tới gần cuối trong lúc ảnh còn đang tải, preload ngay bây giờ
-                if (pendingPreloadRequest) preloadNextChapter();
-            }
-        }
-
-        currentImgs.forEach(function (img) {
-            if (img.complete) {
-                markCurrentLoadedIfReady();
-            } else {
-                img.addEventListener('load', markCurrentLoadedIfReady);
-                img.addEventListener('error', markCurrentLoadedIfReady); // tránh treo nếu 1 ảnh lỗi
-            }
-        });
-
-        function preloadNextChapter(){
-            if (preloadStarted || nextPageUrls.length === 0) return;
-            if (!currentChapterLoaded) {
-                // Ảnh chương hiện tại chưa tải xong hết -> chờ, sẽ tự trigger lại khi load xong
-                pendingPreloadRequest = true;
-                return;
-            }
-            // Bỏ qua preload nếu người dùng đang bật chế độ tiết kiệm dữ liệu
-            if (navigator.connection && navigator.connection.saveData) return;
-            preloadStarted = true;
-            nextPageUrls.forEach(function (src) {
-                const img = new Image();
-                img.src = src;
-            });
-        }
-        // ---------------------------------------------------------------------
-
         function checkPosition(){
             const atBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 20);
-            const nearBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 1500);
-
-            if (nearBottom) preloadNextChapter();
-
             if (isLastChapter && atBottom) {
                 if (readerBar.classList.contains('fixed')) {
                     readerBar.classList.remove('fixed');
