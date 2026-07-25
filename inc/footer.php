@@ -1,1 +1,1 @@
-<div id="footer">Chào..</div>
+<footer>Chào..</footer>

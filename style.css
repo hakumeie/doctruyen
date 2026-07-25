@@ -9,18 +9,18 @@ body {
 a { color: #0055aa; text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-#header {
+#eader {
     background: #2b3e50;
     color: #fff;
     padding: 10px 15px;
     border-bottom: 3px solid #16222d;
 }
-#header h1 {
+header h1 {
     margin: 0;
     font-size: 18px;
 }
-#header h1 a { color: #fff; }
-#header .sub { font-size: 11px; color: #b7c4d0; }
+header h1 a { color: #fff; }
+header .sub { font-size: 11px; color: #b7c4d0; }
 
 #content {
     max-width: 960px;
@@ -200,7 +200,7 @@ table.list tr:hover td {
     margin: 0 auto 4px auto;
 }
 
-#footer {
+footer {
     text-align: center;
     font-size: 11px;
     color: #777;
