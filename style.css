@@ -9,7 +9,7 @@ body {
 a { color: #0055aa; text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-#eader {
+header {
     background: #2b3e50;
     color: #fff;
     padding: 10px 15px;
@@ -174,12 +174,12 @@ table.list tr:hover td {
 #reader-bar select {
     max-width: 200px;
     font-size: 12px;
-    padding: 2px;
+    padding: 5px;
 }
 #reader-bar a.nav-link {
     color: #fff;
     background: #445d75;
-    padding: 4px 10px;
+    padding: 5px 20px;
     border: 1px solid #16222d;
 }
 #reader-bar a.nav-link:hover { background: #16222d; text-decoration: none; }
