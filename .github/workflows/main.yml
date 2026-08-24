@@ -1,0 +1,21 @@
+name: Deploy to FTP
+on:
+  push:
+    branches: [ main ]
+jobs:
+  ftp-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ftp.kai3z.xyz
+          username: okvip@kai3z.xyz
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: domains/kai3z.xyz/public_html/
+          exclude: |
+            .git*
+            .git/**
+            .github/**
